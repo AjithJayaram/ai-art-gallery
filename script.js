@@ -5,7 +5,7 @@ const response = await fetch(
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer sk-this-is-a-free-trial-key' // Free trial key
+            'Authorization': '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' // Free trial key
         },
         body: JSON.stringify({
             text_prompts: [{ text: prompt }],
@@ -17,3 +17,4 @@ const response = await fetch(
         })
     }
 );
+
