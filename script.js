@@ -1,3 +1,4 @@
+// Real AI Image Generator!
 async function generateImage() {
     const prompt = document.getElementById('promptInput').value;
     const loading = document.getElementById('loading');
@@ -10,55 +11,89 @@ async function generateImage() {
     
     // Show loading
     loading.style.display = 'block';
+    loading.textContent = '🤖 AI is painting your masterpiece...';
     
     try {
-        // Simulate AI generation with a placeholder
-        // We'll use Lorem Picsum for random images
-        const response = await fetch('https://picsum.photos/400/400?random=' + Math.random());
+        // Using Hugging Face's Stable Diffusion - FREE!
+        const response = await fetch(
+            'https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer hf_your_token_here', // We'll get this free token next!
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ inputs: prompt }),
+            }
+        );
         
-        // Create a gallery item div
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item';
+        if (!response.ok) {
+            throw new Error('AI is waking up... try again in a moment!');
+        }
         
-        // Create image element
+        const blob = await response.blob();
+        const imgUrl = URL.createObjectURL(blob);
+        
+        // Create image card
+        const imageCard = document.createElement('div');
+        imageCard.className = 'image-card';
+        
         const img = document.createElement('img');
-        img.src = response.url;
+        img.src = imgUrl;
         img.alt = prompt;
         
-        // Create description element
-        const desc = document.createElement('p');
-        desc.className = 'image-description';
-        desc.textContent = prompt;
+        const description = document.createElement('p');
+        description.textContent = prompt;
         
-        // Create download button
         const downloadBtn = document.createElement('button');
-        downloadBtn.textContent = 'Download Image';
+        downloadBtn.textContent = '📥 Download';
         downloadBtn.className = 'download-btn';
-        downloadBtn.onclick = function() {
-            // Create a temporary link to download the image
-            const a = document.createElement('a');
-            a.href = response.url;
-            a.download = 'ai-generated-image.jpg';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        };
+        downloadBtn.onclick = () => downloadImage(imgUrl, prompt);
         
-        // Append elements to gallery item
-        galleryItem.appendChild(img);
-        galleryItem.appendChild(desc);
-        galleryItem.appendChild(downloadBtn);
+        imageCard.appendChild(img);
+        imageCard.appendChild(description);
+        imageCard.appendChild(downloadBtn);
         
-        // Add gallery item to gallery
-        gallery.appendChild(galleryItem);
+        // Add to gallery
+        gallery.appendChild(imageCard);
         
     } catch (error) {
-        alert('Oops! Something went wrong. Try again!');
+        // Fallback to cute placeholder images if AI fails
+        createPlaceholderImage(prompt, gallery);
     }
     
-    // Hide loading
     loading.style.display = 'none';
-    
-    // Clear input
     document.getElementById('promptInput').value = '';
+}
+
+// Download function
+function downloadImage(url, prompt) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ai-art-${prompt.substring(0, 20)}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Fallback function with cute placeholder service
+function createPlaceholderImage(prompt, gallery) {
+    const imageCard = document.createElement('div');
+    imageCard.className = 'image-card';
+    
+    const img = document.createElement('img');
+    img.src = `https://picsum.photos/400/400?random=${Math.random()}`;
+    img.alt = prompt;
+    
+    const description = document.createElement('p');
+    description.textContent = prompt + " 🌟 (AI is loading...)";
+    
+    const downloadBtn = document.createElement('button');
+    downloadBtn.textContent = '📥 Download';
+    downloadBtn.className = 'download-btn';
+    
+    imageCard.appendChild(img);
+    imageCard.appendChild(description);
+    imageCard.appendChild(downloadBtn);
+    gallery.appendChild(imageCard);
 }
