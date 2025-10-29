@@ -20,7 +20,7 @@ async function generateImage() {
             {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer hf_your_token_here', // We'll get this free token next!
+                    'Authorization': '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', // We'll get this free token next!
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ inputs: prompt }),
@@ -97,3 +97,4 @@ function createPlaceholderImage(prompt, gallery) {
     imageCard.appendChild(downloadBtn);
     gallery.appendChild(imageCard);
 }
+
