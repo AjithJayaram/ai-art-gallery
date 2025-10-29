@@ -1,14 +1,15 @@
-.gallery-item {
+/* New styles for AI images */
+.image-card {
     background: rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
 }
 
-.image-description {
-    color: white;
-    font-style: italic;
+.image-card p {
     margin: 10px 0;
+    color: #fff;
+    font-style: italic;
 }
 
 .download-btn {
@@ -18,4 +19,15 @@
 
 .download-btn:hover {
     background: #45a049 !important;
+}
+
+/* Cool loading animation */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.loading {
+    animation: pulse 1.5s infinite;
 }
